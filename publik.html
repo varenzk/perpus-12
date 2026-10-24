@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Perpustakaan Ceria — ditenagai Funny AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="publik.css">
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="inner">
+    <div class="row1">
+      <button class="brand" onclick="showPage('beranda')">📚 Perpustakaan Ceria <span style="font-size:0.65rem; opacity:0.8; font-family:'Space Mono',monospace;">× Funny AI</span></button>
+      <div class="authbox" id="authBox"></div>
+    </div>
+    <div class="row1" style="margin-bottom:4px;">
+      <div class="navgroup">
+        <button class="pill navlink" data-page="beranda" onclick="showPage('beranda')">🏠 Beranda</button>
+        <button class="pill navlink" data-page="katalog" onclick="showPage('katalog')">📖 Katalog</button>
+        <button class="pill navlink" data-page="pinjam" onclick="showPage('pinjam')">🔖 Pinjam Buku</button>
+        <button class="pill navlink" data-page="chat" onclick="showPage('chat')">💬 Chat Pustakawan</button>
+        <button class="pill navlink" data-page="info" onclick="showPage('info')">ℹ️ Info &amp; Keanggotaan</button>
+      </div>
+    </div>
+    <div class="row1">
+      <div class="navgroup">
+        <span class="label">Panel AI Pustakawan:</span>
+        <button class="pill navlink" data-page="klasifikasi" onclick="showPage('klasifikasi')">🧠 Klasifikasi</button>
+        <button class="pill navlink" data-page="scan" onclick="showPage('scan')">📷 Pindai</button>
+        <button class="pill navlink" data-page="tataletak" onclick="showPage('tataletak')">📐 Tata Letak</button>
+        <button class="pill navlink" data-page="dashboard" onclick="showPage('dashboard')">🗂️ Dashboard</button>
+        <button class="pill navlink" data-page="data" onclick="showPage('data')">🧾 Data Buku</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <!-- ================= BERANDA ================= -->
+  <section class="page active" id="page-beranda">
+    <div class="hero">
+      <div class="blob blob1"></div>
+      <div class="blob blob2"></div>
+      <h1>Cari, Pinjam, Baca — Serba Ceria! 🎉</h1>
+      <p>Perpustakaan Ceria dibantu Funny AI untuk memudahkanmu menemukan buku, meminjam, dan menjaga rak selalu rapi sesuai tema.</p>
+      <div class="search-bar">
+        <input type="text" id="heroSearch" placeholder="Cari judul buku, mis. 'Laskar Pelangi'...">
+        <button onclick="heroSearch()">Cari 🔍</button>
+      </div>
+    </div>
+
+    <div class="stats-row" id="statsRow"></div>
+
+    <div class="section-head"><h2>📚 Buku Populer</h2></div>
+    <div class="book-grid" id="popularGrid"></div>
+
+    <div class="section-head" style="margin-top:34px;"><h2>📣 Pengumuman</h2></div>
+    <div class="announce-grid" id="annGrid"></div>
+
+    <div class="cta-banner">
+      <h2>Bingung cari buku apa? 🤔</h2>
+      <p>Ngobrol saja sama pustakawan digital kami — bisa bantu carikan &amp; pinjamkan buku langsung dari chat!</p>
+      <button class="btn btn-coral" onclick="showPage('chat')">💬 Chat Pustakawan Sekarang</button>
+    </div>
+  </section>
+
+  <!-- ================= KATALOG ================= -->
+  <section class="page" id="page-katalog">
+    <span class="eyebrow">Jelajahi Koleksi</span>
+    <h1 class="page-title">Katalog Buku</h1>
+    <input type="text" class="search-input" id="catalogSearch" placeholder="🔍 Cari judul atau penulis..." oninput="renderCatalog()">
+    <div class="filter-row" id="filterRow"></div>
+    <div class="book-grid" id="catalogGrid"></div>
+  </section>
+
+  <!-- ================= PINJAM ================= -->
+  <section class="page" id="page-pinjam">
+    <span class="eyebrow">Kelola Peminjaman</span>
+    <h1 class="page-title">Buku yang Sedang Kamu Pinjam</h1>
+    <div id="loanList"></div>
+
+    <div class="section-head" style="margin-top:30px;"><h2>🕘 Riwayat Aktivitas</h2></div>
+    <div class="panel" id="historyPanel"><div class="empty-note">Belum ada aktivitas peminjaman.</div></div>
+  </section>
+
+  <!-- ================= CHAT ================= -->
+  <section class="page" id="page-chat">
+    <span class="eyebrow">Butuh Bantuan?</span>
+    <h1 class="page-title">Chat dengan Pustakawan</h1>
+    <p class="lede">Ketik pesan seperti <em>"pinjam Sapiens"</em>, <em>"cari buku sejarah"</em>, <em>"kembalikan Negeri 5 Menara"</em>, atau <em>"jam buka"</em>.</p>
+    <div class="chat-shell">
+      <div class="chat-head">🧑‍💼 Pak Budi — Pustakawan Digital <span style="opacity:0.7; font-size:0.7rem;">(ditenagai Funny AI)</span></div>
+      <div class="chat-body" id="chatBody"></div>
+      <div class="chat-input">
+        <input type="text" id="chatInput" placeholder="Tulis pesanmu di sini..." onkeydown="if(event.key==='Enter') sendChat()">
+        <button class="btn btn-coral" onclick="sendChat()">Kirim ➤</button>
+      </div>
+    </div>
+    <div class="chat-suggest">
+      <button onclick="quickChat('cari buku fiksi')">cari buku fiksi</button>
+      <button onclick="quickChat('pinjam Sapiens')">pinjam Sapiens</button>
+      <button onclick="quickChat('jam buka')">jam buka</button>
+      <button onclick="quickChat('kembalikan Negeri 5 Menara')">kembalikan Negeri 5 Menara</button>
+    </div>
+  </section>
+
+  <!-- ================= INFO & KEANGGOTAAN ================= -->
+  <section class="page" id="page-info">
+    <span class="eyebrow">Seputar Perpustakaan</span>
+    <h1 class="page-title">Info &amp; Keanggotaan</h1>
+
+    <div id="memberCard"></div>
+
+    <div class="info-grid">
+      <div class="info-card">
+        <h3>🕒 Jam Operasional</h3>
+        <p>Senin–Jumat: 08.00–20.00</p>
+        <p>Sabtu: 09.00–15.00</p>
+        <p>Minggu &amp; hari libur: Tutup</p>
+      </div>
+      <div class="info-card">
+        <h3>📍 Lokasi</h3>
+        <p>Jl. Melati No. 10, Surakarta</p>
+        <p>Area parkir tersedia, ramah kursi roda</p>
+      </div>
+    </div>
+
+    <div class="section-head"><h2>❓ FAQ</h2></div>
+    <div id="faqList"></div>
+  </section>
+
+  <!-- ================= KLASIFIKASI (AI) ================= -->
+  <section class="page" id="page-klasifikasi">
+    <span class="eyebrow">Panel AI · Fitur 01</span>
+    <h1 class="page-title">Klasifikasi Tema Otomatis</h1>
+    <ul class="bullets">
+      <li>Funny AI membaca judul, sinopsis, kata kunci, bahkan isi bab awal buku, lalu mengelompokkannya ke tema (fiksi, sejarah, sains, dll) menggunakan model NLP — text classification dengan embedding + clustering.</li>
+      <li>Jika data buku belum lengkap, Funny AI memindai (OCR) sampul atau halaman judul untuk mengekstrak informasi, lalu mencocokkannya dengan database ISBN atau katalog perpustakaan nasional.</li>
+    </ul>
+    <div class="panel">
+      <h2>🎯 Coba simulasinya</h2>
+      <textarea id="clsInput" placeholder="Tempel judul/sinopsis singkat, mis. 'Petualangan luar angkasa mencari planet baru...'"></textarea>
+      <br><br>
+      <button class="btn btn-purple" onclick="runClassifyDemo()">Klasifikasikan →</button>
+      <div class="bubble-field" id="bubbleField"></div>
+    </div>
+  </section>
+
+  <!-- ================= SCAN (AI) ================= -->
+  <section class="page" id="page-scan">
+    <span class="eyebrow">Panel AI · Fitur 02</span>
+    <h1 class="page-title">Pemindaian Barcode + Computer Vision</h1>
+    <ul class="bullets">
+      <li>Petugas memindai barcode/ISBN dengan kamera ponsel; sistem otomatis menarik metadata (genre, penulis, tahun) dari database eksternal seperti Google Books API atau WorldCat.</li>
+      <li>Untuk buku tanpa barcode, computer vision mendeteksi sampul dan mencocokkan visualnya dengan database gambar buku.</li>
+    </ul>
+    <div class="panel">
+      <h2>🎯 Coba simulasinya (data nyata)</h2>
+      <input type="text" id="scanInput" placeholder="Masukkan ISBN, mis. 9786020633749">
+      <br><br>
+      <button class="btn btn-purple" onclick="runScanDemo()">📷 Pindai</button>
+      <div class="scan-visual"><div class="scan-line" id="scanLine"></div></div>
+      <div class="scan-result" id="scanResult"></div>
+      <div class="hint">Demo ini memanggil database buku publik secara langsung.</div>
+    </div>
+  </section>
+
+  <!-- ================= TATA LETAK (AI) ================= -->
+  <section class="page" id="page-tataletak">
+    <span class="eyebrow">Panel AI · Fitur 03</span>
+    <h1 class="page-title">Rekomendasi Tata Letak Rak</h1>
+    <ul class="bullets">
+      <li>Setelah tema teridentifikasi, algoritma optimasi menyusun pembagian rak berdasarkan jumlah buku per tema, frekuensi peminjaman, dan kapasitas rak.</li>
+    </ul>
+    <div class="panel">
+      <h2>🎯 Geser untuk mengubah frekuensi peminjaman tiap tema</h2>
+      <div id="sliderRows"></div>
+      <div class="rank-title">Urutan penempatan (dekat pintu masuk → paling jauh)</div>
+      <ol class="rank-list" id="rankList"></ol>
+    </div>
+  </section>
+
+  <!-- ================= DASHBOARD (AI) ================= -->
+  <section class="page" id="page-dashboard">
+    <span class="eyebrow">Panel AI · Fitur 04</span>
+    <h1 class="page-title">Dashboard Pustakawan</h1>
+    <ul class="bullets">
+      <li>Menampilkan peta rak digital secara langsung dari data katalog &amp; peminjaman — makin banyak buku dipinjam, makin lega raknya!</li>
+    </ul>
+    <div class="panel">
+      <h2>🗂️ Peta rak (real-time dari katalog)</h2>
+      <div id="dashMockup"></div>
+      <h2 style="margin-top:20px;">🔁 Rekomendasi perpindahan buku</h2>
+      <div id="recoList"></div>
+    </div>
+  </section>
+
+  <!-- ================= DATA (AI) ================= -->
+  <section class="page" id="page-data">
+    <span class="eyebrow">Panel AI · Fitur 05</span>
+    <h1 class="page-title">Skema Data yang Dikumpulkan</h1>
+    <p class="lede">Klik tiap kartu untuk melihat daftar field data yang membuat Funny AI bekerja akurat.</p>
+    <div class="data-grid" id="dataGrid"></div>
+    <div class="note"><strong>Catatan:</strong> data tidak harus 100% lengkap di awal — Funny AI bisa dilatih bertahap, mulai dari buku yang datanya paling lengkap dulu.</div>
+  </section>
+
+  <!-- ================= MASUK ================= -->
+  <section class="page" id="page-masuk">
+    <div class="auth-card">
+      <span class="eyebrow">Selamat datang kembali</span>
+      <h1>Masuk</h1>
+      <p class="lede">Masuk untuk melihat kartu anggota dan meminjam buku atas namamu.</p>
+      <form onsubmit="doLogin(event)" novalidate>
+        <div class="fld"><label for="loginEmail">Email</label><input id="loginEmail" type="email" autocomplete="email" required></div>
+        <div class="fld"><label for="loginPw">Kata sandi</label><input id="loginPw" type="password" autocomplete="current-password" required></div>
+        <div class="err" id="loginErr" role="alert"></div>
+        <button class="btn btn-coral" type="submit">Masuk</button>
+      </form>
+      <p class="auth-alt">Belum punya akun? <a href="#" onclick="showPage('daftar');return false">Daftar</a></p>
+    </div>
+  </section>
+
+  <!-- ================= DAFTAR ================= -->
+  <section class="page" id="page-daftar">
+    <div class="auth-card">
+      <span class="eyebrow">Gratis untuk semua pembaca</span>
+      <h1>Daftar anggota</h1>
+      <p class="lede">Buat akun untuk mendapat kartu anggota dan meminjam hingga 5 buku.</p>
+      <form onsubmit="doRegister(event)" novalidate>
+        <div class="fld"><label for="regNama">Nama lengkap</label><input id="regNama" type="text" autocomplete="name" required></div>
+        <div class="fld"><label for="regEmail">Email</label><input id="regEmail" type="email" autocomplete="email" required></div>
+        <div class="fld"><label for="regPw">Kata sandi</label><input id="regPw" type="password" autocomplete="new-password" required><small>Minimal 8 karakter.</small></div>
+        <div class="fld"><label for="regPw2">Ulangi kata sandi</label><input id="regPw2" type="password" autocomplete="new-password" required></div>
+        <div class="err" id="regErr" role="alert"></div>
+        <button class="btn btn-coral" type="submit">Buat akun</button>
+      </form>
+      <p class="auth-alt">Sudah punya akun? <a href="#" onclick="showPage('masuk');return false">Masuk</a></p>
+    </div>
+  </section>
+
+  <footer class="sitefoot">Perpustakaan Ceria × Funny AI — prototipe demo, data tersimpan hanya selama sesi ini.</footer>
+</div>
+
+<script src="publik.js"></script>
+</body>
+</html>
